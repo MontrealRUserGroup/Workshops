@@ -3,6 +3,7 @@
 ## Special Topics: Bayesian Methods
 ## Designed and Facilitated by Corey Chivers
 ## Department of Biology, McGill University
+## corey.chivers@mail.mcgill.ca
 ########################################################################
 
 
@@ -10,8 +11,8 @@
 
 rm(list=ls())			                   ## Housekeeping
 
-#install.packages('MHadaptive')             ## This package will do the MCMC heavy lifting
-#library(MHadaptive)
+install.packages('MHadaptive')             ## This package will do the MCMC heavy lifting
+library(MHadaptive)
 # If you are running an older version of R ( < 2.14 ), run the following line
 # to load the functions we will need:
 
@@ -111,9 +112,9 @@ li_salmon<-function(pars)
 {
     a<-pars[1]      #intercept
     b<-pars[2]      #slope
-    tau<-pars[3]    #error (precision)
+    sigma<-pars[3]    #error (precision)
     mean_egg_mass<- a + b * salmon$body_length
-    log_likelihood<-sum( dnorm(salmon$egg_mass,mean_egg_mass, tau, log=TRUE) )
+    log_likelihood<-sum( dnorm(salmon$egg_mass,mean_egg_mass, sigma, log=TRUE) )
     prior<- prior_salmon(pars)
     return(log_likelihood + prior)
 }
@@ -129,13 +130,13 @@ prior_salmon<-function(pars)
 {
     a<-pars[1]      #intercept
     b<-pars[2]      #slope
-    tau<-pars[3]    #error
+    sigma<-pars[3]    #error
 
     prior_a<-dnorm(a,0,100,log=TRUE)             ## Here, I have used very non-informative (flat) priors on all 
     prior_b<-dnorm(b,0,100,log=TRUE)             ## parameters.  How would you change these if you had some prior information
-    prior_tau<-dgamma(tau,1,1/100,log=TRUE)      ## about one or more of the parameters?
+    prior_sigma<-dgamma(sigma,1,1/100,log=TRUE)      ## about one or more of the parameters?
 
-    return(prior_a + prior_b + prior_tau)
+    return(prior_a + prior_b + prior_sigma)
 }
 
 ###  --  ###
@@ -145,7 +146,7 @@ prior_salmon<-function(pars)
 ##@  2.4  @##
 
 ## Run Metropolis-Hastings MCMC on the regression model
-mcmc_salmon<-Metro_Hastings(li_func=li_salmon,pars=c(0,0,3),par_names=c('a','b','tau'),iterations=10000,burn_in=2000)
+mcmc_salmon<-Metro_Hastings(li_func=li_salmon,pars=c(0,0,3),par_names=c('a','b','sigma'),iterations=10000,burn_in=2000)
 
 ###  --  ###
 
@@ -183,9 +184,9 @@ predict_eggmass<-function(pars,length)
 {
     a<-pars[,1]      #intercept
     b<-pars[,2]      #slope
-    tau<-pars[,3]    #error    
+    sigma<-pars[,3]    #error    
     pred_mass<- a + b * length 
-    pred_mass<- rnorm(length(a),pred_mass,tau)
+    pred_mass<- rnorm(length(a),pred_mass,sigma)
     return(pred_mass)
 }
 
