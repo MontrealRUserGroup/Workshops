@@ -1,6 +1,8 @@
 Reproducible Research
 Monday, April 30, 2012  14h-16h
 Denis Haine (Université de Montréal)
+https://sites.google.com/site/mcgillbgsa/workshops/reproducible-research
+
 Topics
 Reproducible research was first coined by Pr. Jon Claerbout, professor of geophysics at Stanford University, to describe that the results from researches can be replicated by other scientists by making available data, procedures, materials and the computational environment on which these results were produced from.
 
