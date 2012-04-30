@@ -1,0 +1,84 @@
+%% Montreal R User Group Workshop
+%% Denis Haine
+%% Date: 30APR2012 
+%% Object: example Sweave file
+
+\documentclass[letterpaper,11pt]{article}
+\usepackage{microtype}
+\usepackage{xspace}
+\usepackage{
+	relsize,setspace,  		% used by latex(describe( ))
+	url,				% allows nice break of url
+	calc,epic,color,		% used for latex(..., dotchart=TRUE)
+        booktabs,
+        lscape,
+        moreverb,
+        Sweave
+}
+
+\SweaveOpts{keep.source=TRUE}
+% To produce only pdf graphics. Set default plot size to 5 x 3.5 in.
+\SweaveOpts{prefix.string=graphics/plot, eps = FALSE, pdf = TRUE}
+\SweaveOpts{width=5, height=3.5}
+
+\title{Basic Example}
+\author{You}
+
+\begin{document}
+
+\maketitle
+
+\section{Analysis}
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+aliquip ex ea commodo consequat. Duis aute irure dolor in
+reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+culpa qui officia deserunt mollit anim id est laborum.
+
+<<>>=
+data(mtcars)
+library(Hmisc)
+@ 
+
+<<results=tex>>=
+latex(describe(mtcars), file='')
+@ 
+
+<<results=tex>>=
+latex(summary(cyl ~ ., method = 'reverse', data = mtcars[mtcars$cyl<=6, ], 
+              test = TRUE), npct = 'both', dotchart = TRUE, file = '', 
+      landscape = TRUE, round = 1)
+@ 
+
+<<fig=TRUE, echo=FALSE>>=
+with(mtcars, plot(wt, mpg, xlab = "Car Weight", ylab = "Miles Per Gallon", 
+                  pch=19))
+with(mtcars, abline(lm(mpg ~ wt), col = "red"))
+@ 
+
+<<>>=
+fit <- lm(mpg ~ disp + hp + wt + drat, data = mtcars) 
+summary(fit)
+sum.fit <- summary(fit)
+@ 
+
+The $p$-value for horsepower in the model is
+\Sexpr{round(sum.fit$coefficients[3, 4], 3)}.
+
+<<results=tex, echo=FALSE>>=
+library(xtable)
+xtable(sum.fit$coefficients, label = "tab:lm:coef", caption = "A linear model", 
+       booktabs = TRUE, digits = c(0, 1, 2, 1, 3), file = '', 
+       where = "!htbp")
+@ 
+
+This analysis was run with the following versions of R, operating
+system and additional packages:
+<<echo=FALSE, results=tex>>=
+toLatex(sessionInfo(), locale=FALSE)
+@ 
+
+\end{document}
