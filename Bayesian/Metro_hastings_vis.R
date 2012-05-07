@@ -4,7 +4,7 @@
 ################################################################
 
 
-mh_vis<-function(prop_sd=0.1,target_mu=0,
+mh_vis<-function(prop_sd=0.5,target_mu=0,
     target_sd=1,seed=1,iter=5000,plot_file='MH.pdf')
 {
     plot_range=c(target_mu-3*target_sd,target_mu+3*target_sd)
