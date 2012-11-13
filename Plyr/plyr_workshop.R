@@ -293,7 +293,7 @@ cast.iris<-cast(data=molten.iris,
 # Plot the data mixing ggplot2 and plyr
 
 #setwd("~")
-pdf("iris sepal explore plot.pdf")
+#pdf("iris sepal explore plot.pdf")
 
 d_ply(.data=cast.iris,
       .variables="Species",
@@ -311,4 +311,4 @@ d_ply(.data=cast.iris,
                     alpha=I(0.3),
                     fill=part))})
 
-dev.off()
+#dev.off()
